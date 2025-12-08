@@ -4,13 +4,11 @@ ENTRY(_start)
 /* tell kernel where sections of object files will be put in final kernal image */
 SECTIONS
 {
-    /* 
-     * under BIOS, 1M start offset was effectively guaranteed.
-     * UEFI made things complicated, and 2M is a safer place to load.
-    */
+    /* under BIOS, 1M start offset was effectively guaranteed.
+       UEFI made things complicated, and 2M is a safer place to load. */
     . = 2M;
     
-    /* first put multiboot header, as it needs to be in first 8KiB */
+    /* first put multiboot header, as it must be in first 8KiB of kernel file. Next, put in .text section. */
     .text BLOCK(4K) : ALIGN(4K)
     {
         *(.multiboot)
