@@ -1,5 +1,7 @@
-#!/bin/bash
+#!/bin/sh
+set -e
+. ./headers.sh
 
-i686-elf-as src/boot.s -o boot.o
-i686-elf-gcc -c src/kernel.c -o kernel.o -std=gnu99 -ffreestanding -O2 -Wall -Wextra
-i686-elf-gcc -T linker.ld -o myos.bin -ffreestanding -O2 -nostdlib boot.o kernel.o -lgcc
+for PROJECT in $PROJECTS; do
+  (cd $PROJECT && DESTDIR="$SYSROOT" $MAKE install)
+done
