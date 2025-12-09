@@ -7,5 +7,5 @@ void kernel_main(void)
 {
   /* initialize terminal interface */
   terminal_initialize();
-  printf("hey");
+  printf("You're in bootstrapped!");
 }
