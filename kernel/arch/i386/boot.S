@@ -29,7 +29,7 @@ _start:
         /* set up stack. must be done in assembly, as C cannot function without a stack. */
         mov $stack_top, %esp
 
-        /* call global constructors.
+        /* call global constructors. */
         call _init
 
         /* transfer control to the main kernel. */
