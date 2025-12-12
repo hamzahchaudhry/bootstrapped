@@ -1,0 +1,11 @@
+# build artifacts
+*.o
+*.a
+*.d
+*.kernel
+*.iso
+
+# generated directories
+sysroot/
+isodir/
+
