@@ -105,7 +105,7 @@ void terminal_putchar(char c)
     }
   if(c == '\b')
     {
-      if (--terminal_column < 0) terminal_column = 0;
+      if(terminal_column > 0) terminal_column--;
       terminal_putentryat(' ', terminal_colour, terminal_column, terminal_row);
       return;
     }
