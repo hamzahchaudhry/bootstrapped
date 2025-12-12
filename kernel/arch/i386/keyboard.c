@@ -1,6 +1,7 @@
 #include <stdint.h>
 
 #include <kernel/keyboard.h>
+#include <kernel/tty.h>
 
 #include "io.h"
 
@@ -32,5 +33,6 @@ unsigned char keyboard_poll(void)
   if(scancode & 0x80) return 0;
   if(scancode >= sizeof(scancode_ascii)) return 0;
 
+  terminal_putchar(scancode_ascii[scancode]);
   return scancode_ascii[scancode];
 }

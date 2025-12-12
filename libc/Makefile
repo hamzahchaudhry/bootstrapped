@@ -37,6 +37,8 @@ string/memcmp.o \
 string/memcpy.o \
 string/memmove.o \
 string/memset.o \
+string/strcmp.o \
+string/strchr.o \
 string/strlen.o \
 
 HOSTEDOBJS=\
