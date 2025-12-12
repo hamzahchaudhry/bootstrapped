@@ -103,6 +103,18 @@ void terminal_putchar(char c)
       terminal_newline();
       return;
     }
+  if(c == '\b')
+    {
+      if (--terminal_column < 0) terminal_column = 0;
+      terminal_putentryat(' ', terminal_colour, terminal_column, terminal_row);
+      return;
+    }
+  if(c == '\t')
+    {
+      terminal_column += 4;
+      terminal_putentryat(' ', terminal_colour, terminal_column, terminal_row);
+      return;
+    }
 
   terminal_putentryat(c, terminal_colour, terminal_column, terminal_row);
 
