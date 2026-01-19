@@ -1,0 +1,26 @@
+name: build
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y make grub-common unzip curl
+
+      - name: Install i686-elf toolchain
+        run: |
+          curl -L -o /tmp/i686-elf-tools.zip https://github.com/lordmilko/i686-elf-tools/releases/latest/download/i686-elf-tools-linux.zip
+          sudo unzip -q /tmp/i686-elf-tools.zip -d /opt/i686-elf-tools
+          echo "/opt/i686-elf-tools/bin" >> "$GITHUB_PATH"
+
+      - name: Build
+        run: ./build.sh
