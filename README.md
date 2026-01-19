@@ -9,6 +9,14 @@ to explore low-level systems programming.
 ## Screenshot
 <img width="1920" height="500" alt="image" src="https://github.com/user-attachments/assets/0e1a747f-2338-4a1f-b0f5-ed4ce214cec9" />
 
+## Current Features
+
+- 32-bit protected-mode kernel (Multiboot via GRUB)
+- GDT/IDT setup with exception stubs
+- PIC remap with IRQ-driven keyboard input
+- Minimal VGA text terminal with scrolling
+- Tiny in-kernel shell (kshell) with basic commands
+
 ## Directory Layout
 
 ```
@@ -18,11 +26,15 @@ to explore low-level systems programming.
 │   ├── arch/i386/          # x86-specific code
 │   │   ├── boot.S          # Multiboot header and entry point
 │   │   ├── crti.S / crtn.S # Runtime init/fini glue
+│   │   ├── interrupts.c/h  # IDT setup + exception stubs
+│   │   ├── isr_stubs.S     # ISR/IRQ assembly stubs
+│   │   ├── pic.c / pic.h   # 8259 PIC remap + masks
 │   │   ├── linker.ld       # Kernel linker script
+│   │   ├── keyboard.c      # IRQ-driven keyboard
 │   │   ├── tty.c           # VGA terminal implementation
 │   │   └── vga.h
 │   ├── include/kernel/     # Public kernel headers
-│   └── kernel/             # Core kernel logic
+│   └── kernel/             # Core kernel logic (kernel + kshell)
 │
 ├── libc/                   # Freestanding C library (libk)
 │   ├── include/            # Standard headers
@@ -73,7 +85,7 @@ This produces:
 
 ---
 
-### Run in QEMU
+### Run in QEMU (direct kernel)
 
 ```sh
 qemu-system-i386 -kernel bootstrapped.kernel
