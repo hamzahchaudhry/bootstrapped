@@ -7,7 +7,7 @@ The project is intended as an educational x86 kernel developed from scratch
 to explore low-level systems programming.
 
 ## Screenshot
-<img width="720" height="424" alt="image" src="https://github.com/user-attachments/assets/c9c4285b-45f7-4409-b084-d4c2fb364ec1" />
+<img width="1920" height="500" alt="image" src="https://github.com/user-attachments/assets/0e1a747f-2338-4a1f-b0f5-ed4ce214cec9" />
 
 ## Directory Layout
 
