@@ -2,6 +2,7 @@
 
 #include <kernel/interrupts.h>
 #include <kernel/keyboard.h>
+#include <kernel/kshell.h>
 #include <kernel/pic.h>
 #include <kernel/tty.h>
 
@@ -17,11 +18,5 @@ void kernel_main(void)
   /* initialize terminal interface */
   terminal_initialize();
   printf("You're in bootstrapped!\n");
-  printf("Type keys to see scancode->ASCII via IRQ:\n");
-
-  while (1)
-  {
-    unsigned char c = keyboard_getchar();
-    if (c) putchar(c);
-  }
+  kshell_run();
 }
