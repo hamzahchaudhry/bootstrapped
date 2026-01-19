@@ -17,6 +17,5 @@ void kernel_main(void)
 
   /* initialize terminal interface */
   terminal_initialize();
-  printf("You're in bootstrapped!\n");
   kshell_run();
 }
