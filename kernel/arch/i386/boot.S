@@ -16,24 +16,24 @@
 .section .rodata
 .align 8
 gdt_data:
-	.long 0x00000000		/* null descriptor */
+	.long 0x00000000 /* null descriptor */
 	.long 0x00000000
 
 	/* code descriptor: base 0x0, limit 0xFFFFF, 4KiB granularity */
-	.word 0xFFFF			/* limit low */
-	.word 0x0000			/* base low */
-	.byte 0x00			/* base middle */
-	.byte 0x9A			/* access */
-	.byte 0xCF			/* granularity */
-	.byte 0x00			/* base high */
+	.word 0xFFFF	 /* limit low */
+	.word 0x0000     /* base low */
+	.byte 0x00	 /* base middle */
+	.byte 0x9A	 /* access */
+	.byte 0xCF	 /* granularity */
+	.byte 0x00	 /* base high */
 
 	/* data descriptor: base 0x0, limit 0xFFFFF, 4KiB granularity */
-	.word 0xFFFF			/* limit low */
-	.word 0x0000			/* base low */
-	.byte 0x00			/* base middle */
-	.byte 0x92			/* access */
-	.byte 0xCF			/* granularity */
-	.byte 0x00			/* base high */
+	.word 0xFFFF	 /* limit low */
+	.word 0x0000	 /* base low */
+	.byte 0x00	 /* base middle */
+	.byte 0x92	 /* access */
+	.byte 0xCF	 /* granularity */
+	.byte 0x00	 /* base high */
 
 end_of_gdt:
 gdt_descriptor:
@@ -49,16 +49,16 @@ stack_top:
 
 /* kernel entry point */
 .section .text
-.global _start
+.globl _start
 .type _start, @function
 _start:
-        /* GRUB has loaded into 32-bit protected mode, so interrupts + paging disabled */
+        /* GRUB loaded into 32-bit protected mode, so interrupts + paging disabled */
         /* set up GDT */
-        cli /* ensure interrupts off even though they should be already */
+        cli                 /* ensure interrupts off even though they should be already */
         lgdt gdt_descriptor /* load GDT into GDTR */
-        ljmp $0x08, $1f /* reload CS with the new code selector */
+        ljmp $0x08, $1f     /* reload CS with the new code selector */
 1:
-        movw $0x10, %ax /* data selector */
+        movw $0x10, %ax     /* data selector */
         movw %ax, %ds
         movw %ax, %ss
         movw %ax, %es

@@ -1,11 +1,17 @@
 #include <stdint.h>
 
 #include <kernel/keyboard.h>
+#include <kernel/pic.h>
 
 #include "io.h"
 
 static const uint16_t DATA_PORT = 0x60;
-static const uint16_t STATUS_REGISTER = 0x64;
+
+/* simple ring buffer for IRQ-driven input */
+#define KBD_BUF_SIZE 64
+static volatile uint8_t kbd_buf[KBD_BUF_SIZE];
+static volatile uint8_t kbd_head;
+static volatile uint8_t kbd_tail;
 
 /* set-1 scancode -> ASCII for unmodified keys. zero for non-printables. */
 static const unsigned char scancode_ascii[128]
@@ -21,16 +27,37 @@ static const unsigned char scancode_ascii[128]
      [0x31] = 'n', [0x32] = 'm',  [0x33] = ',',  [0x34] = '.',  [0x35] = '/',
      [0x39] = ' '};
 
-unsigned char keyboard_poll(void)
+static void kbd_put(uint8_t c)
 {
-  /* status register bit 0 tells us if the controller has a byte ready. */
-  if((inb(STATUS_REGISTER) & 0x1) == 0) return 0;
+  uint8_t next = (uint8_t)((kbd_head + 1u) % KBD_BUF_SIZE);
+  if (next == kbd_tail) return; /* drop on overflow */
+  kbd_buf[kbd_head] = c;
+  kbd_head = next;
+}
 
+static unsigned char kbd_get(void)
+{
+  if (kbd_head == kbd_tail) return 0;
+  unsigned char c = kbd_buf[kbd_tail];
+  kbd_tail = (uint8_t)((kbd_tail + 1u) % KBD_BUF_SIZE);
+  return c;
+}
+
+void keyboard_irq_handler(void)
+{
   uint8_t scancode = inb(DATA_PORT);
 
   /* ignore break codes (release) and extended prefixes for now. */
-  if(scancode & 0x80) return 0;
-  if(scancode >= sizeof(scancode_ascii)) return 0;
+  if ((scancode & 0x80) == 0 && scancode < sizeof(scancode_ascii))
+  {
+    unsigned char c = scancode_ascii[scancode];
+    if (c) kbd_put((uint8_t)c);
+  }
 
-  return scancode_ascii[scancode];
+  PIC_sendEOI(1);
+}
+
+unsigned char keyboard_getchar(void)
+{
+  return kbd_get();
 }
