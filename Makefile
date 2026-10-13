@@ -1,21 +1,8 @@
-ARCH      ?= riscv
-CROSS     ?= riscv64-elf-
-CC         = $(CROSS)gcc
-CFLAGS     = -march=rv32i -mabi=ilp32 -Wall -O2 -ffreestanding -nostdlib -fno-builtin
-LDFLAGS    = -T linker.ld -nostdlib -Wl,-melf32lriscv
-OBJS = boot.o kernel.o
+CC = riscv64-unknown-elf-gcc
+CFLAGS = -g -ffreestanding -O0
+LDFLAGS = -nostdlib -Wl,--gc-sections -Wl,--build-id=none -Wl,-T,riscv64-virt.ld
 
-all: kernel.elf
+ASFILES = crt0.s ns16550a.s
 
-kernel.elf: $(OBJS)
-	$(CC) $(LDFLAGS) -o $@ $(OBJS)
-
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
-
-%.o: %.S
-	$(CC) $(CFLAGS) -c $< -o $@
-
-.PHONY: clean
-clean:
-	rm -f kernel.elf $(OBJS)
+all:
+	$(CC) $(CFLAGS) $(LDFLAGS) $(ASFILES) kernel.c -o kernel
