@@ -25,6 +25,7 @@ SECTIONS
 /* >>>>> MY ADDITION <<<<< */
   /* set __stack_top = 0x88000000, the end of RAM */
   PROVIDE(__stack_top = ORIGIN(RAM) + LENGTH(RAM));
+  PROVIDE(__uart_base = 0x10000000);
 /* >>>>> MY ADDITION <<<<< */
 
   /* Place the build-id as close to the ELF headers as possible.  This
